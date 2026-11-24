@@ -1,14 +1,6 @@
-// Cloudflare Worker serving the built site as static assets. The four pages
-// are client-side paths, so unknown paths fall back to index.html. Films are
-// not here: host them anywhere that serves video (see src/content/projects.ts).
-// Change "name" to your own; add "routes" for a custom domain.
+// Cloudflare Pages: static Vite build with client-side route fallback.
 {
-  "name": "desk-portfolio",
+  "name": "emma-zhuo-portfolio",
   "compatibility_date": "2026-10-30",
-  "workers_dev": true,
-  "preview_urls": true,
-  "assets": {
-    "directory": "./dist",
-    "not_found_handling": "single-page-application"
-  }
+  "pages_build_output_dir": "./dist"
 }

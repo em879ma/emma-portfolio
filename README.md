@@ -29,6 +29,8 @@ Client-side routes use Cloudflare Pages' default SPA fallback.
 npx wrangler pages deploy dist --project-name emma-zhuo-portfolio
 ```
 
+Website: https://emma-zhuo-portfolio.pages.dev/
+
 Source: https://github.com/em879ma/emma-portfolio
 
 ## Credits
