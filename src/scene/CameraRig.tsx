@@ -14,6 +14,10 @@ export function CameraRig({ route, intro }: { route: Route; intro: boolean }) {
   const look = useMemo(() => new Vector3(...(intro ? INTRO : SHOTS[route]).target), [])
   const goalPos = useMemo(() => new Vector3(), [])
   const goalLook = useMemo(() => new Vector3(), [])
+  const framingCamera = useMemo(() => new PerspectiveCamera(), [])
+  const cabinetCorners = useMemo(() => [-1.73, -1.02].flatMap(x =>
+    [0, 1.58].flatMap(y => [-.27, .24].map(z => new Vector3(x, y, z)))), [])
+  const projected = useMemo(() => new Vector3(), [])
   // the lens shift, as `top` in Frame (0.5: centred, no shift)
   const lift = useRef(0.5)
 
@@ -36,6 +40,27 @@ export function CameraRig({ route, intro }: { route: Route; intro: boolean }) {
       const need = frame.fit / 2 / halfH
       const dist = goalPos.distanceTo(goalLook)
       if (need > dist) goalPos.sub(goalLook).multiplyScalar(need / dist).add(goalLook)
+    }
+    // The cabinet is closer than the wall target. Fitting at the target alone
+    // can crop it after entering the room or changing browser zoom/aspect.
+    // Fit its actual corners, including space for the Hobbies tag.
+    if (!intro && route === 'landing') {
+      framingCamera.fov = frame.fov
+      framingCamera.aspect = size.width / full
+      framingCamera.setViewOffset(size.width, full, 0, full - size.height, size.width, size.height)
+      framingCamera.updateProjectionMatrix()
+      for (let i = 0; i < 12; i++) {
+        framingCamera.position.copy(goalPos)
+        framingCamera.lookAt(goalLook)
+        framingCamera.updateMatrixWorld()
+        let overflow = 1
+        for (const corner of cabinetCorners) {
+          projected.copy(corner).project(framingCamera)
+          overflow = Math.max(overflow, Math.abs(projected.x) / .92, Math.abs(projected.y) / .88)
+        }
+        if (overflow <= 1.001) break
+        goalPos.sub(goalLook).multiplyScalar(Math.min(1.4, overflow + .015)).add(goalLook)
+      }
     }
     const cam = camera as PerspectiveCamera
     if (cut) {
