@@ -49,14 +49,14 @@ export const SHOTS: Record<Route, Shot> = {
   landing: {
     // square on to the slide: the slide and the desk share the vertical
     // centre line, the chair turned off to the right so the middle stays open
-    position: [0.15, 1.55, 3.5],
-    target: [0.15, 1.12, -2],
+    position: [-0.12, 1.55, 3.5],
+    target: [-0.12, 1.12, -2],
     fov: 34,
-    fit: 3.6,
+    fit: 4.5,
     // a phone stands further back with a longer lens, looking level, so the
     // slide grows against the desk; the lens shift puts the slide above the
     // whole set, chair and all (the slide's lines also grow there, Projection.tsx)
-    phone: { position: [0.15, 1.5, 4.6], target: [0.15, 1.5, 0], fov: 40, fit: 2.65, top: 0.4 },
+    phone: { position: [-0.12, 1.5, 4.6], target: [-0.12, 1.5, 0], fov: 40, fit: 4.5, top: 0.4 },
   },
   projects: {
     // square on to the slide, at its height, with a long lens: the frame fills
@@ -76,6 +76,10 @@ export const SHOTS: Record<Route, Shot> = {
     fov: 19,
     // close enough that the sheet is as wide as the reading column (100vw - 32px)
     phone: { position: [0.05, 1.32, 0.6], target: [0.05, 0.98, -0.1], fov: 53 },
+  },
+  resume: {
+    position: [.35, 2.45, .83], target: [.35, .66, .80], fov: 30, fit: .85,
+    phone: { position: [.35, 2.45, .83], target: [.35, .66, .80], fov: 30, fit: .72 },
   },
   about: {
     // sitting at the right end of the desk: pinboard, notebook and the lamp's

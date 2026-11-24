@@ -4,3 +4,8 @@ dist
 .claude/worktrees/
 public/projects/*/film.mp4
 .wrangler
+.openai/
+.env
+.env.*
+!.env.example
+.claude/

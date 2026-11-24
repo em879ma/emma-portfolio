@@ -1,35 +1,15 @@
-// The notebook on the About desk. Newest entry is the open page; older
-// ones are earlier pages. Paragraphs are separated by a blank line;
-// [text](/about/x.jpg) opens that picture over the page, ![alt](/about/x.jpg)
-// puts a small round picture in the line, and
-// ![alt](/about/x.jpg /about/full/x.jpg) opens the larger one on click.
+export const portrait = { src: '/about/emma-portrait.jpeg', alt: 'Portrait of Yuwei (Emma) Zhuo' }
 
-import type { Text } from '../lang'
-
-export type Note = {
-  date: string
-  title: Text
-  body: Text
-}
-
-// A square print at the head of the notebook page, whichever entry is open (480×480).
-export const portrait = { src: '/about/portrait.jpg', alt: 'A placeholder for your portrait' }
-
-export const notes: Note[] = [
+export const notes = [
   {
-    date: '2026-01-01',
-    title: { en: 'About me', zh: '关于我' },
-    body: {
-      en: `Hi, I’m Your Name, a product engineer in [Your City](/about/place.jpg).
-
-This is the notebook: write a few short paragraphs about who you are, what you care about, and what you do when you are not working. A new entry goes at the top of src/content/notes.ts and becomes the open page.
-
-A picture can sit in the line, like this one ![A small picture](/about/sticker.jpg /about/full/sticker.jpg), and opens whole on click.`,
-      zh: `你好，我是 Your Name，一名在[你的城市](/about/place.jpg)工作的产品工程师。
-
-这里是笔记本：用几段短文写写你是谁、在意什么、工作之外做些什么。新的一篇写在 src/content/notes.ts 的最前面，就会成为翻开的那一页。
-
-图片可以放在行内，比如这张 ![一张小图](/about/sticker.jpg /about/full/sticker.jpg)，点开能看大图。`,
+    "date": "2026-11-22",
+    "title": {
+      "en": "Between products & research",
+      "zh": "在产品与研究之间"
     },
-  },
+    "body": {
+      "en": "I’m Yuwei (Emma) Zhuo. I’m pursuing technical product management, with interests that span AI, data-driven decisions, and the way people experience technology.\n\nMy work connects product questions with technical investigation: turning electricity-market forecasts into decisions, evaluating how AI systems reason, and exploring more expressive ways to connect over video. This portfolio brings together applied projects and research, for conversations about work, graduate study, and collaboration.\n\nMy earlier experience also includes AI product work at SenseTime, data analysis at TikTok, and research on kidney transplant queueing-system design. I’m currently expanding these case studies.\n\nMy toolkit includes Python, SQL, C++, R, PyTorch, Pandas, NumPy, Power BI, MATLAB, Git, and Linux.\n\nAway from projects, I enjoy badminton, tennis, guitar, musicals, cooking, photography, and film. You can reach me at ywzhuo@umich.edu.",
+      "zh": "你好，我是 Yuwei (Emma) Zhuo。我以技术产品经理为职业方向，关注 AI、数据驱动决策，以及人与技术互动的方式。\n\n我喜欢把产品问题转化为可探索的技术问题：将电力市场预测转化为决策，评估 AI 系统的推理能力，以及探索更有表现力的视频交流方式。这里汇集了我的应用项目与研究经历，也希望由此开启关于工作、研究生学习与合作的交流。\n\n我还曾参与商汤的 AI 产品工作、TikTok 的数据分析，以及肾移植排队系统设计研究。这些案例正在进一步整理中。\n\n我的工具箱包括 Python、SQL、C++、R、PyTorch、Pandas、NumPy、Power BI、MATLAB、Git 和 Linux。\n\n项目之外，我喜欢羽毛球、网球、吉他、音乐剧、烹饪、摄影和电影。欢迎通过 ywzhuo@umich.edu 联系我。"
+    }
+  }
 ]

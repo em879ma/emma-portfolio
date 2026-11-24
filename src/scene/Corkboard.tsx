@@ -21,8 +21,8 @@ const PHOTO = { w: 0.2, h: 0.235 }
 const SLOTS = [
   { x: -0.29, y: 0.15, rot: -0.05, hue: '#7d9aa8', pin: C.orange },
   { x: -0.02, y: 0.17, rot: 0.03, hue: '#c98b62', pin: C.graphite },
-  { x: 0.25, y: 0.14, rot: -0.03, hue: '#a7a982', pin: '#f2efe8' },
-  { x: -0.23, y: -0.15, rot: 0.03, hue: '#b39a7c', pin: '#f2efe8' },
+  { x: 0.25, y: 0.14, rot: -0.03, hue: '#a7a982', pin: '#f1c166' },
+  { x: -0.23, y: -0.15, rot: 0.03, hue: '#b39a7c', pin: '#f1c166' },
   { x: 0.04, y: -0.13, rot: -0.04, hue: '#9a6a52', pin: C.orange },
   { x: 0.3, y: -0.16, rot: 0.04, hue: '#8fa3b0', pin: C.graphite },
 ]
@@ -42,10 +42,10 @@ export function Corkboard({ onPhoto }: { onPhoto?: (i: number) => void }) {
     // A print in a white border; a real photo is drawn over the placeholder once it loads.
     const photo = (hue: string, seed: number, real: Photo | undefined) => {
       const tex = paintTexture(256, 300, (g) => {
-        g.fillStyle = '#f7f5f0'
+        g.fillStyle = '#fefaf0'
         g.fillRect(0, 0, 256, 300)
         const grad = g.createLinearGradient(0, 16, 0, 240)
-        grad.addColorStop(0, '#e9e4da')
+        grad.addColorStop(0, '#fefaf0')
         grad.addColorStop(1, hue)
         g.fillStyle = grad
         g.fillRect(16, 16, 224, 224)
@@ -57,7 +57,7 @@ export function Corkboard({ onPhoto }: { onPhoto?: (i: number) => void }) {
       })
       const g = (tex.image as HTMLCanvasElement).getContext('2d')!
       if (real?.caption) {
-        g.fillStyle = '#4a4741'
+        g.fillStyle = '#542916'
         g.font = 'italic 22px Newsreader, Georgia, serif'
         g.textAlign = 'center'
         g.fillText(real.caption, 128, 276, 224)
@@ -111,7 +111,7 @@ export function Corkboard({ onPhoto }: { onPhoto?: (i: number) => void }) {
 // An oak strut hinged on the back of the frame, its foot on the desk behind.
 // Drawn in the board's leaning frame, so it is turned forward by the lean.
 function Strut() {
-  const oak = useMemo(() => woodTexture(64, 512, '#c99a68', 13), [])
+  const oak = useMemo(() => woodTexture(64, 512, '#542916', 13), [])
   const hinge = 0.24 // up the back of the board
   const back = -0.02 * SCALE
   // the foot, in the board's frame: on the desk, behind the hinge
@@ -166,7 +166,7 @@ function curled() {
 // An oak frame, mitred at the corners, standing proud of the cork.
 function Frame() {
   const t = T
-  const oak = useMemo(() => woodTexture(512, 64, '#c99a68', 11), [])
+  const oak = useMemo(() => woodTexture(512, 64, '#542916', 11), [])
   const bars: [number, number, number, number, number][] = [
     [0, BOARD.h / 2 + t / 2, BOARD.w + t * 2, t, 0],
     [0, -BOARD.h / 2 - t / 2, BOARD.w + t * 2, t, 0],

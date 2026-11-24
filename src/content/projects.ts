@@ -12,7 +12,7 @@
 
 import type { Text } from '../lang'
 
-const MEDIA = 'https://media.tianqiz.me'
+
 
 type Picture = { src: string; alt: string }
 
@@ -26,7 +26,9 @@ export type Project = {
   pitch: Text
   /** who it was made with, shown under the pitch */
   with?: { name: string; href: string }
+  presentation?: string
   cover: Picture
+  evidence?: (Picture & { caption: Text })[]
   slides: (Picture & { title: Text; body: Text })[]
   /** a 60–90 s screen recording, shown as a slide after the cover, with a line on what it follows */
   film?: { src: Text; poster: Text; caption: Text }
@@ -63,125 +65,432 @@ export function contextOf(p: Project) {
 
 export const projects: Project[] = [
   {
-    id: 'troupe',
-    title: 'Troupe',
-    org: 'Open source',
-    period: 'Oct–Nov 2026',
-    pitch: { en: 'Puts Claude Code and Codex on one team: you agree a plan with an orchestrator, then each role builds in its own terminal, worktree and branch, and a reviewer checks every branch before it is merged.', zh: '让 Claude Code 和 Codex 组成一支队伍：先和 orchestrator 商定计划，然后每个角色在自己的终端、worktree 和分支里开工，每个分支合并前都有 reviewer 把关。' },
-    cover: { src: '/projects/troupe/01-panel.jpg', alt: 'The orchestrator\'s terminal beside the troupe panel: roles, stages, activity, and a flow of the team with search done and theme working' },
-    film: {
-      src: { en: `${MEDIA}/troupe/film-en.mp4`, zh: `${MEDIA}/troupe/film-zh.mp4` },
-      poster: { en: '/projects/troupe/film-poster-en.jpg', zh: '/projects/troupe/film-poster-zh.jpg' },
-      caption: { en: 'One task from plan to cleanup: the plan approved in the panel, Claude Code and Codex building side by side, a reviewer on each branch, and your yes before the pull request. 68 seconds.', zh: '一个任务从计划走到收尾：在面板里批准计划，Claude Code 和 Codex 并排开工，reviewer 逐个检查分支，开 pull request 之前等你点头。68 秒。' },
+    "id": "gair-evaluation",
+    "title": "GAIR Lab",
+    "org": "SJTU · Research Assistant",
+    "period": "Nov 2024–Jan 2025",
+    "pitch": {
+      "en": "Built benchmarks, automated graders, and adaptive prompts for multi-subject reasoning agents.",
+      "zh": "为多学科推理智能体构建评测基准、自动评分器与自适应提示。"
     },
-    slides: [
+    "cover": {
+      "src": "/projects/emma/gair-team.jpg",
+      "alt": "GAIR Lab team group photo"
+    },
+    "slides": [
       {
-        src: '/projects/troupe/02-plan.jpg',
-        alt: 'The plan in the troupe panel: goal, done-when items, three roles with their agents and files, and the decisions taken',
-        title: { en: 'Agree on the plan first', zh: '先把计划谈妥' },
-        body: { en: 'The orchestrator reads the code and writes the plan with you: the goal, when it is done, the roles, and which files each may touch. One key approves it or sends it back with changes; nothing starts before the yes.', zh: 'orchestrator 先读代码，再和你一起写计划：目标、怎样算完成、分哪些角色、每个角色能动哪些文件。按一个键批准，或者提出修改退回；你点头之前，什么都不会开始。' },
+        "src": "/projects/emma/gair-loop.svg",
+        "alt": "Four-stage iterative enhancement loop adapted from the original portfolio",
+        "title": {
+          "en": "A loop driven by evaluation",
+          "zh": "以评测驱动的迭代循环"
+        },
+        "body": {
+          "en": "Evaluate, analyze failures, select targeted data, then refine the model and prompts. I connected benchmark construction with automated grading and iterative error analysis.",
+          "zh": "评测、分析错答、选择针对性数据，再调整模型与提示。我将基准构建、自动评分和迭代错误分析连接成可重复的流程。"
+        }
       },
       {
-        src: '/projects/troupe/03-roles.jpg',
-        alt: 'Three terminals: a Claude Code builder, a Codex builder editing files, and the reviewer\'s report on a branch',
-        title: { en: 'Each role in a real terminal', zh: '每个角色一个真实终端' },
-        body: { en: 'Every role is an ordinary Claude Code or Codex session in its own tmux window, git worktree and branch. You can read along in any of them, or type into one.', zh: '每个角色都是一个普通的 Claude Code 或 Codex 会话，各自占一个 tmux 窗口、一个 git worktree 和一条分支。你可以随时旁观任何一个，也可以直接在里面打字。' },
-      },
-      {
-        src: '/projects/troupe/04-waits.jpg',
-        alt: 'The panel highlighting a builder that waits on you, with its goal, agent, branch and the files it may touch',
-        title: { en: 'One panel says who needs you', zh: '一个面板告诉你谁在等你' },
-        body: { en: 'The panel beside the orchestrator shows who is working, who is waiting, and on what. When an agent asks a question, it lights up; jump into that window and answer it.', zh: 'orchestrator 旁边的面板显示谁在干活、谁在等、等什么。哪个 agent 提了问题，它就会亮起来；跳进那个窗口回答就好。' },
-      },
-      {
-        src: '/projects/troupe/05-handoff.jpg',
-        alt: 'The merge gate in the panel, with every role done and the stages up to "Merged?" checked off',
-        title: { en: 'You approve the handoff', zh: '交付由你批准' },
-        body: { en: 'A reviewer checks each branch as it lands and sends findings back to the same builder. Opening the pull request and the merge wait for you; only then are the windows closed and the worktrees removed.', zh: 'reviewer 在每个分支完成时检查，发现的问题退回给同一个 builder 修改。开 pull request 和合并都要等你确认；之后才会关掉窗口、清理 worktree。' },
-      },
+        "src": "/projects/emma/gair-score-comparison.svg",
+        "alt": "Recorded scores: our model 140, qwq 121, deepseek-r1-lite 123, kimi 125, GLM Zero-Preview 107, out of 150",
+        "title": {
+          "en": "Results you can inspect",
+          "zh": "可查验的实验结果"
+        },
+        "body": {
+          "en": "Across this 22-question evaluation, our model scored 140/150; comparison-model scores ranged from 107 to 125. Explore the original scoring table and input-mode experiments in Project details.",
+          "zh": "在这次 22 题评测中，我们的模型得分为 140/150，对比模型得分为 107–125。原始评分表与输入方式实验见项目详情。"
+        }
+      }
     ],
-    metrics: [],
-    disclaimer: { en: 'The mission in the film and pictures is a small sample repository (a bookshelf page), run for real and recorded for the demo.', zh: '演示片和图片里的任务是一个小的示例仓库（一个书架页面），真实运行并录制下来。' },
-    stack: ['TypeScript', 'Node.js', 'tmux', 'git worktrees', 'Claude Code', 'Codex'],
-    details: [
-      {
-        heading: { en: 'Background', zh: '背景' },
-        body: [
-          { en: 'A coding agent is good at one change at a time. A bigger change wants several of them at once, and then the hard part is keeping track: who is doing what, on which branch, and who is stuck waiting for an answer. Troupe is built for that, and is open source under MIT.', zh: '一个编程 agent 一次做好一个改动没问题。改动一大，就需要好几个同时干，难点变成了跟踪：谁在做什么、在哪条分支上、谁卡住了在等回答。Troupe 就是为此而做的，以 MIT 协议开源。' },
-        ],
-      },
-      {
-        heading: { en: 'What I did', zh: '我的工作' },
-        body: [
-          { en: 'I wrote it, and use it to lead an agent team: an orchestrator I plan with, builders, and a reviewer.', zh: '它由我编写，我也用它带领 agent 团队：一个和我一起做计划的 orchestrator、几个 builder、一个 reviewer。' },
-        ],
-      },
-      {
-        heading: { en: 'Method and trade-offs', zh: '方法与取舍' },
-        body: [
-          { en: 'Real sessions, not a framework: each role is the same Claude Code or Codex you would open by hand, so any agent can be mixed in per role, with its own model and effort, and a person can step into any window.', zh: '用真实会话，而不是另造框架：每个角色就是你平时手动打开的那个 Claude Code 或 Codex，所以每个角色都可以选不同的 agent、模型和力度，人也可以随时进入任何一个窗口。' },
-          { en: 'Git keeps the roles apart: every role works in its own worktree and branch off the mission branch, and your own checkout stays where it was. The plan declares which files each role touches, and two roles on the same files need an explicit order.', zh: '用 git 把角色隔开：每个角色在从任务分支拉出的独立 worktree 和分支里工作，你自己的工作区原地不动。计划里写明每个角色会动哪些文件，两个角色动同一批文件时必须明确先后。' },
-          { en: 'People decide at the gates: approving the plan, opening the pull request and confirming the merge. The CLI enforces the gates, dependencies and permissions; the workflow around them is a skill you can edit or replace.', zh: '关键节点由人决定：批准计划、开 pull request、确认合并。CLI 负责守住这些关口、依赖和权限；围绕它们的工作流是一个 skill，可以改，也可以整个换掉。' },
-          { en: 'Small on purpose: TypeScript, tmux and git, with no runtime npm dependencies.', zh: '刻意保持小巧：TypeScript、tmux 和 git，没有任何运行时 npm 依赖。' },
-        ],
-      },
+    "metrics": [],
+    "stack": [
+      "LLM evaluation",
+      "Benchmarking",
+      "Prompt engineering"
     ],
-    links: [{ label: { en: 'Source on GitHub', zh: 'GitHub 源码' }, href: 'https://github.com/hitianqi/troupe' }],
+    "details": [
+      {
+        "heading": {
+          "en": "Research context",
+          "zh": "研究背景"
+        },
+        "body": [
+          {
+            "en": "At SJTU GAIR Lab, under Prof. Pengfei Liu, I worked on evaluating autonomous problem-solving agents across Gaokao-style multi-subject reasoning tasks.",
+            "zh": "在上海交通大学 GAIR Lab，我在刘鹏飞教授指导下参与自主解题智能体评测，覆盖高考风格的多学科推理任务。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "My contribution",
+          "zh": "我的贡献"
+        },
+        "body": [
+          {
+            "en": "I built subject-specific benchmarks from historical public exam questions, developed reusable regex and rubric-guided AI graders, checked automated scores against human review, and used error analysis to adapt prompting strategies.",
+            "zh": "我基于历年公开试题构建分学科基准，开发可复用的正则与规则引导 AI 评分器，用人工复核校验自动评分，并根据错误分析调整提示策略。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Method: a repeatable loop",
+          "zh": "方法：可重复的循环"
+        },
+        "body": [
+          {
+            "en": "The original portfolio connects benchmark evaluation, error analysis, targeted data selection, and model/prompt iteration. Exact answers use rule-based grading; semantic responses use rubric-guided grading with human validation.",
+            "zh": "旧作品集连接了基准评测、错误分析、针对性数据选择、模型与提示迭代四个阶段。精确答案使用规则评分，语义回答使用评分规则引导的自动评分，并结合人工校验。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Reading the evidence",
+          "zh": "如何解读实验记录"
+        },
+        "body": [
+          {
+            "en": "The input-mode experiment examines how the representation of a question affects responses. The separate model comparison records question-level scores on 22 questions totaling 150 points. These address different questions and are interpreted separately.",
+            "zh": "输入方式实验考察题目表示方式如何影响回答；另一份模型对比记录了 22 道题、共 150 分的逐题得分。两份记录回答不同的问题，因此分别解读。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Results & scope",
+          "zh": "成果与范围"
+        },
+        "body": [
+          {
+            "en": "Deliverables included a reusable evaluation codebase and report. The model comparison records 140/150 for our model. This result describes one evaluation setup; broader comparisons require controlled model versions, prompting conditions, and repeated runs.",
+            "zh": "交付包括可复用评测代码与报告。模型对比记录中，我们的模型得分为 140/150。该结果对应一次具体评测设置；更广泛的比较需要控制模型版本、提示条件，并进行重复实验。"
+          }
+        ]
+      }
+    ],
+    "links": [],
+    "evidence": [
+      {
+        "src": "/projects/emma/prompt.png",
+        "alt": "25-item input-mode comparison with completeness and correctness annotations",
+        "caption": {
+          "en": "Input-mode experiment: 25 items compare text-only, text-plus-image, and caption inputs. Caption responses are annotated for completeness and correctness. Original blank and merged cells are retained; no aggregate accuracy is inferred.",
+          "zh": "输入方式实验：25 个条目对比纯文本、文本加图像与图像描述输入，并标注描述模式回答的完整性与正确性。保留原始空白和合并单元格，不据此推算总体准确率。"
+        }
+      },
+      {
+        "src": "/projects/emma/GAIR-result.png",
+        "alt": "22-question model comparison with question-level points and total scores",
+        "caption": {
+          "en": "10 multiple-choice, 6 fill-in-the-blank, and 6 free-response questions; 150 points total. Recorded scores: our model 140, qwq 121, deepseek-r1-lite 123, kimi 125, GLM Zero-Preview 107.",
+          "zh": "10 道选择题、6 道填空题、6 道解答题，共 150 分。记录总分：我们的模型 140；qwq 121；deepseek-r1-lite 123；kimi 125；GLM Zero-Preview 107。"
+        }
+      }
+    ]
   },
   {
-    // A placeholder tray that uses every field. Replace it with your own project.
-    id: 'sample-project',
-    title: 'Sample Project',
-    org: 'Example Studio',
-    period: 'Jan–Jun 2026',
-    with: { name: 'A collaborator', href: 'https://example.com' },
-    pitch: { en: 'One sentence on what the project is and who it is for.', zh: '用一句话说明这个项目是什么、为谁而做。' },
-    cover: { src: '/projects/sample-project/01-cover.jpg', alt: 'Placeholder: the project at a glance' },
-    // A film plays as the slide after the cover. Host the video elsewhere and
-    // uncomment this; a poster is the still shown before it plays.
-    // film: {
-    //   src: 'https://media.example.com/sample-project/film.mp4',
-    //   poster: '/projects/sample-project/film-poster.jpg',
-    //   caption: { en: 'What the film follows, and how long it is.', zh: '演示片讲了什么，时长多少。' },
-    // },
-    slides: [
-      {
-        src: '/projects/sample-project/02-step.jpg',
-        alt: 'Placeholder: the first thing to show',
-        title: { en: 'The first thing to show', zh: '第一件要展示的事' },
-        body: { en: 'One picture and two or three sentences per slide: what the reader is looking at, and why it matters.', zh: '每张幻灯片一张图、两三句话：读者看到的是什么，为什么重要。' },
-      },
-      {
-        src: '/projects/sample-project/03-step.jpg',
-        alt: 'Placeholder: the second thing to show',
-        title: { en: 'The second thing to show', zh: '第二件要展示的事' },
-        body: { en: 'Keep the long story for the details page; a slide says one thing.', zh: '长篇留给详情页；一张幻灯片只说一件事。' },
-      },
+    "id": "dr-compass",
+    "title": "DR Compass",
+    "org": "Research · Advisor: Prof. Bochao Zhao",
+    "period": "Mar 2026–Present",
+    "pitch": {
+      "en": "From uncertain electricity prices to day-ahead demand-response decisions.",
+      "zh": "将不确定的电价预测转化为日前需求响应决策。"
+    },
+    "cover": {
+      "src": "/projects/emma/dr-cover.svg",
+      "alt": "DR Compass forecast, scenarios, optimization, evaluation"
+    },
+    "slides": [],
+    "metrics": [],
+    "stack": [
+      "Python",
+      "XGBoost",
+      "FastAPI",
+      "Scenario optimization"
     ],
-    metrics: [
-      { value: '3×', label: 'faster than before', caveat: 'how it was measured, and on what' },
-      { value: '42', label: 'people using it', caveat: 'where the number comes from' },
+    "details": [],
+    "links": [
+      {
+        "label": {
+          "en": "Source Repository",
+          "zh": "Source Repository"
+        },
+        "href": "https://github.com/em879ma/DR-Electricity-Trading-System"
+      }
     ],
-    results: { src: '/projects/sample-project/04-results.jpg', alt: 'Placeholder: a chart of the results' },
-    disclaimer: { en: 'Say here what in the pictures is illustrative rather than real, for example invented data.', zh: '在这里说明图片中哪些内容是示意而非真实的，比如虚构的数据。' },
-    stack: ['TypeScript', 'React', 'Python'],
-    details: [
-      {
-        heading: { en: 'Background', zh: '背景' },
-        body: [{ en: 'The problem, and the situation it came up in.', zh: '要解决的问题，以及它出现的场景。' }],
-      },
-      {
-        heading: { en: 'What I did', zh: '我的工作' },
-        body: [{ en: 'Your part in it, in a few plain sentences.', zh: '你在其中做了什么，用几句平实的话说清楚。' }],
-      },
-      {
-        heading: { en: 'Method and trade-offs', zh: '方法与取舍' },
-        body: [
-          { en: 'One paragraph per decision: what you chose, and what you gave up for it.', zh: '每个决定一段：选了什么，为此放弃了什么。' },
-        ],
-      },
-    ],
-    site: 'https://example.com',
-    links: [{ label: { en: 'Source on GitHub', zh: 'GitHub 源码' }, href: 'https://github.com' }],
+    "presentation": "/projects/emma/presentation.html"
   },
+  {
+    "id": "solar-car",
+    "title": "U-M Solar Car Team",
+    "org": "University of Michigan · Operations",
+    "period": "Sep 2025–Apr 2026",
+    "pitch": {
+      "en": "Coordinating the people, resources, and logistics behind a solar racing team.",
+      "zh": "协调太阳能赛车团队背后的人员、资源与赛事物流。"
+    },
+    "cover": {
+      "src": "/projects/emma/solarcar.jpg",
+      "alt": "University of Michigan solar car from the original portfolio"
+    },
+    "slides": [
+      {
+        "src": "/projects/emma/routemap.webp",
+        "alt": "Route image from the original portfolio",
+        "title": {
+          "en": "Plan beyond the vehicle",
+          "zh": "规划不止于赛车"
+        },
+        "body": {
+          "en": "Route planning, procurement, logistics, and transport all have to work together to support a competition-grade solar vehicle.",
+          "zh": "路线规划、采购、物流与运输必须协同运转，才能支持竞赛级太阳能赛车。"
+        }
+      },
+      {
+        "src": "/projects/emma/workspace.jpg",
+        "alt": "Solar car team workspace",
+        "title": {
+          "en": "Make resources usable",
+          "zh": "让资源落实到执行"
+        },
+        "body": {
+          "en": "Supported sponsor engagement, data collection, and resource-allocation initiatives across the team.",
+          "zh": "参与赞助方沟通、数据收集与资源分配，将支持转化为团队可用的资源。"
+        }
+      }
+    ],
+    "metrics": [],
+    "stack": [
+      "Operations",
+      "Route planning",
+      "Procurement",
+      "Logistics"
+    ],
+    "details": [
+      {
+        "heading": {
+          "en": "Context",
+          "zh": "背景"
+        },
+        "body": [
+          {
+            "en": "As an Operations Team Member, I help coordinate the work surrounding the University of Michigan Solar Car Team’s competition-grade vehicle.",
+            "zh": "作为密歇根大学太阳能赛车队运营成员，我参与协调围绕竞赛级赛车展开的支持工作。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "My contribution",
+          "zh": "我的贡献"
+        },
+        "body": [
+          {
+            "en": "My work spans route planning, materials procurement, logistics, transportation, sponsor engagement, and data collection. These activities connect resource planning with the team’s day-to-day execution.",
+            "zh": "我的工作涉及路线规划、物资采购、物流运输、赞助方沟通和数据收集，将资源规划与团队日常执行连接起来。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "Team-level outcome",
+          "zh": "团队层面的成果"
+        },
+        "body": [
+          {
+            "en": "I contributed to sponsor and resource initiatives supporting partnerships totaling more than $2.4 million. That figure describes the wider partnership effort; it is not an amount I individually raised.",
+            "zh": "我参与的赞助与资源工作支持了总额超过 240 万美元的合作伙伴关系。该数字属于整体合作成果，并非我个人独立筹集的金额。"
+          }
+        ]
+      }
+    ],
+    "links": []
+  },
+  {
+    "id": "independent-ai-studio",
+    "title": "Independent AI Media Studio",
+    "org": "AI Media & Community · Content & Marketing Assistant",
+    "period": "May 2026–Aug 2026",
+    "pitch": {
+      "en": "Making AI-industry ideas accessible through content, conversations, and community.",
+      "zh": "通过内容、对话与社群，让 AI 行业的新想法更易理解。"
+    },
+    "cover": {
+      "src": "/projects/emma/studio-conversations.jpg",
+      "alt": "Conversations at an in-person AI community event in Shanghai"
+    },
+    "slides": [],
+    "metrics": [],
+    "stack": [
+      "Content strategy",
+      "Event operations",
+      "Community engagement",
+      "Workflow design"
+    ],
+    "details": [
+      {
+        "heading": {
+          "en": "Work & contributions",
+          "zh": "工作内容与贡献"
+        },
+        "body": [
+          {
+            "en": "Produced and curated AI-industry content for a Shanghai-based media studio and technology community, translating emerging trends into accessible updates for practitioners.",
+            "zh": "为上海的 AI 媒体工作室与技术社群制作、策划行业内容，将新兴趋势转化为从业者易于理解的资讯。"
+          },
+          {
+            "en": "Coordinated end-to-end delivery of technology salons and podcasts, spanning creator scouting, guest interviews, event operations, AI news-channel management, and community engagement.",
+            "zh": "协调技术沙龙与播客的全流程交付，涵盖创作者发掘、嘉宾访谈、活动运营、AI 新闻频道管理与社群互动。"
+          },
+          {
+            "en": "Standardized recurring workflows for content sourcing, guest outreach, and event execution to improve consistency across media and community programs.",
+            "zh": "为内容选题与素材搜集、嘉宾邀约、活动执行等重复工作建立标准化流程，提高媒体与社群项目交付的一致性。"
+          },
+          {
+            "en": "Helped grow the community to 500+ active AI professionals, achieve 100% attendance across multiple industry mixers, and support B2B collaborations with major companies in Shanghai.",
+            "zh": "协助社群发展至 500 多名活跃 AI 从业者，推动多场行业交流活动达到 100% 出席率，并支持与上海大型企业的 B2B 合作。"
+          }
+        ]
+      }
+    ],
+    "links": [],
+    "evidence": [
+      {
+        "src": "/projects/emma/studio-event.jpg",
+        "alt": "AI After Dark event in Shanghai",
+        "caption": {
+          "en": "AI After Dark — an in-person AI community event in Shanghai.",
+          "zh": "AI After Dark — 上海线下 AI 社群活动。"
+        }
+      },
+      {
+        "src": "/projects/emma/studio-demo.jpg",
+        "alt": "Hands-on technology demonstration at a Shanghai AI event",
+        "caption": {
+          "en": "Hands-on technology exchanges at a Shanghai AI event.",
+          "zh": "上海 AI 活动中的技术演示与交流。"
+        }
+      },
+      {
+        "src": "/projects/emma/studio-conversations.jpg",
+        "alt": "Conversations at an in-person AI community event in Shanghai",
+        "caption": {
+          "en": "Conversations and connections within the AI community.",
+          "zh": "AI 社群中的面对面交流与连接。"
+        }
+      }
+    ]
+  },
+  {
+    "id": "interaid-network",
+    "title": "InterAid Network",
+    "org": "Michigan Data Science Team · Data & Product Member",
+    "period": "Sep 2026–Present",
+    "pitch": {
+      "en": "Making surplus medical supplies visible, discoverable, and easier to route across organizations.",
+      "zh": "让医疗余量物资可见、可查找，让跨机构资源流转更顺畅。"
+    },
+    "cover": {
+      "src": "/projects/emma/interaid-landing.png",
+      "alt": "InterAid Network actual pilot website landing page"
+    },
+    "slides": [
+      {
+        "src": "/projects/emma/interaid-listings.png",
+        "alt": "Actual InterAid surplus listings with fictional demonstration data",
+        "title": {
+          "en": "From inventory to shared visibility",
+          "zh": "从分散库存到共享可见"
+        },
+        "body": {
+          "en": "Structured listings bring item categories, quantities, locations, and status into one view. This working local pilot uses fictional demo data; public deployment is in progress.",
+          "zh": "结构化列表将物资类别、数量、地点与状态放在同一视图中。图中为实际本地试点界面，使用虚构演示数据；公网部署进行中。"
+        }
+      },
+      {
+        "src": "/projects/emma/interaid-flow.svg",
+        "alt": "Interactive illustrative surplus request workflow",
+        "title": {
+          "en": "Coordinate the handoff",
+          "zh": "让资源交接有据可循"
+        },
+        "body": {
+          "en": "Select a step to explore the workflow. The product supports discovery, requests, and notifications; organizations arrange physical pickup or delivery outside the platform.",
+          "zh": "点击左侧步骤查看流程。产品支持物资发现、申请与通知，实际取货或配送由机构在线下协调。"
+        }
+      }
+    ],
+    "metrics": [],
+    "stack": [
+      "Inventory & listings",
+      "Database design",
+      "Import templates",
+      "AI photo recognition"
+    ],
+    "details": [
+      {
+        "heading": {
+          "en": "System overview",
+          "zh": "系统介绍"
+        },
+        "body": [
+          {
+            "en": "InterAid Network is a medical-supply redistribution platform that connects hospitals, clinics, and distribution partners. It brings surplus inventory and supply needs into a shared workspace, helping organizations discover available resources and coordinate redistribution.",
+            "zh": "InterAid Network 是连接医院、诊所与物资分发伙伴的医疗物资再分配平台。系统将分散的库存余量与物资需求汇集到共享工作空间，帮助机构发现可用资源并协调流转。"
+          },
+          {
+            "en": "Organizations apply to join and are approved before their staff receive role-based access. Inventory tracks supplies on hand; Listings makes surplus available across organizations. Users can search and filter items, submit quantity-based requests, and receive notifications as coordination progresses. Organization coordinators manage team access.",
+            "zh": "机构申请加入并获批后，成员通过角色权限访问系统。Inventory 管理机构持有的物资，Listings 将可供分享的余量发布给其他机构。用户可搜索筛选物资、按数量提交申请，并接收协调进展通知；机构负责人负责成员与权限管理。"
+          },
+          {
+            "en": "The pilot supports manual entry, spreadsheet import and export, and AI-assisted item recognition from photos. Discovery and requests happen in the application, while organizations arrange pickup or delivery directly. The system uses React/Vite, FastAPI, and SQLAlchemy.",
+            "zh": "试点支持手动录入、表格导入导出，以及基于照片的 AI 物资识别。物资发现与申请在应用内完成，实际取货或配送由机构直接协调。系统采用 React/Vite、FastAPI 与 SQLAlchemy。"
+          }
+        ]
+      },
+      {
+        "heading": {
+          "en": "My contributions",
+          "zh": "我的贡献"
+        },
+        "body": [
+          {
+            "en": "Built the Inventory and Listings modules, including their field definitions, database structures, and data-entry workflows. Defined how item categories, names, quantities, units, sizes, locations, expiry dates, and notes are represented consistently across inventory records and published listings.",
+            "zh": "构建 Inventory 与 Listings 两个模块，包括字段定义、数据库结构与数据录入流程；统一物资类别、名称、数量、单位、规格、地点、有效期及备注等信息在库存记录与发布列表中的表示方式。"
+          },
+          {
+            "en": "Designed and built spreadsheet templates and import workflows for Inventory and Listings, aligning template columns with application fields and database records to support batch data entry.",
+            "zh": "设计并搭建 Inventory 与 Listings 的表格模板及导入流程，将模板列与系统字段、数据库记录对应，支持批量录入物资数据。"
+          },
+          {
+            "en": "Introduced and built the AI photo-recognition feature: users upload an item photo, the system extracts suggested item details, and users review and correct the fields before saving. Integrated recognition into the inventory-entry workflow to reduce manual transcription while keeping users in control of the final record.",
+            "zh": "引入并搭建 AI 识图功能：用户上传物资照片后，系统提取建议的物资信息，用户核对、修正字段后再保存。将识别能力接入库存录入流程，减少手动转录，同时由用户确认最终记录。"
+          }
+        ]
+      }
+    ],
+    "links": [],
+    "evidence": [
+      {
+        "src": "/projects/emma/interaid-landing.png",
+        "alt": "InterAid Network actual pilot website landing page",
+        "caption": {
+          "en": "Actual pilot landing page.",
+          "zh": "实际试点网站首页。"
+        }
+      },
+      {
+        "src": "/projects/emma/interaid-listings.png",
+        "alt": "Demo surplus listings",
+        "caption": {
+          "en": "Actual local interface with fictional organizations and quantities. Demo states do not represent real donations.",
+          "zh": "实际本地界面，机构和数量均为虚构演示数据，状态不代表真实捐赠成果。"
+        }
+      }
+    ]
+  }
 ]

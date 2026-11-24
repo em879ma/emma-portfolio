@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { useLayoutEffect, useMemo, useRef } from 'react'
 import { BackSide, Color, LatheGeometry, Mesh, Object3D, Quaternion, Vector2, Vector3, type MeshStandardMaterial, type ShaderMaterial } from 'three'
 import { SET } from './shots'
+import { paintTexture } from './look'
 
 // Set dressing that is not a page: a desk lamp, a desk plant and a mug. The
 // plant is a Poly Haven scan (CC0, see public/models/CREDITS.md); the rest is
@@ -58,8 +59,8 @@ function DeskLamp() {
   }, [])
   const [bx, by, bz] = SET.deskLamp
   const stemH = SET.lampHead[1] - by
-  const enamel = <meshPhysicalMaterial color="#ece6da" roughness={0.42} clearcoat={0.7} clearcoatRoughness={0.22} />
-  const brass = <meshStandardMaterial color="#c49d5f" metalness={1} roughness={0.28} />
+  const enamel = <meshPhysicalMaterial color="#f1c166" roughness={0.42} clearcoat={0.7} clearcoatRoughness={0.22} />
+  const brass = <meshStandardMaterial color="#b79858" metalness={1} roughness={0.28} />
   return (
     <>
       <group position={SET.deskLamp}>
@@ -97,7 +98,7 @@ function DeskLamp() {
           {enamel}
         </mesh>
         <mesh geometry={inner}>
-          <meshStandardMaterial color="#fff4e2" emissive="#ffd9a6" emissiveIntensity={0.5} roughness={0.6} side={BackSide} />
+          <meshStandardMaterial color="#fefaf0" emissive="#f1c166" emissiveIntensity={0.5} roughness={0.6} side={BackSide} />
         </mesh>
         {/* the rolled lip at the mouth */}
         <mesh position={[0, -SHADE.len, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
@@ -112,9 +113,9 @@ function DeskLamp() {
         {/* the bulb, up inside the shade */}
         <mesh position={[0, -0.05, 0]}>
           <sphereGeometry args={[0.02, 20, 12]} />
-          <meshStandardMaterial color="#fff6e6" emissive="#ffe6c0" emissiveIntensity={3} />
+          <meshStandardMaterial color="#fff6e6" emissive="#f1c166" emissiveIntensity={3} />
         </mesh>
-        <spotLight position={[0, -0.06, 0]} target={target} angle={0.6} penumbra={1} intensity={2.5} distance={1.4} decay={1.4} color="#ffd6a0" />
+        <spotLight position={[0, -0.06, 0]} target={target} angle={0.6} penumbra={1} intensity={2.5} distance={1.4} decay={1.4} color="#f1c166" />
       </group>
       <primitive object={target} />
     </>
@@ -134,6 +135,16 @@ function useShadows(obj: Object3D) {
 
 // A stoneware mug, turned on a lathe: a glazed outside, a darker inside with coffee.
 function Mug({ position }: { position: readonly [number, number, number] }) {
+  const blockM = useMemo(() => paintTexture(512, 512, (g) => {
+    g.clearRect(0, 0, 512, 512)
+    g.fillStyle = '#ffcb05'
+    // A block-serif M, drawn as geometry rather than a font-dependent glyph.
+    const points = [[54,100],[178,100],[256,202],[334,100],[458,100],[458,145],[420,145],[420,365],[458,365],[458,410],[302,410],[302,365],[337,365],[337,220],[256,320],[175,220],[175,365],[210,365],[210,410],[54,410],[54,365],[92,365],[92,145],[54,145]]
+    g.beginPath()
+    points.forEach(([x,y], i) => i ? g.lineTo(x,y) : g.moveTo(x,y))
+    g.closePath()
+    g.fill()
+  }), [])
   const body = useMemo(() => {
     const p = [
       [0, 0],
@@ -150,7 +161,7 @@ function Mug({ position }: { position: readonly [number, number, number] }) {
   return (
     <group position={position}>
       <mesh geometry={body} castShadow receiveShadow>
-        <meshStandardMaterial color="#e9e4da" roughness={0.25} />
+        <meshStandardMaterial color="#00274c" roughness={0.22} />
       </mesh>
       <mesh position={[0, 0.072, 0]} rotation-x={-Math.PI / 2}>
         <circleGeometry args={[0.036, 40]} />
@@ -158,7 +169,11 @@ function Mug({ position }: { position: readonly [number, number, number] }) {
       </mesh>
       <mesh position={[0.04, 0.05, 0]} rotation-z={-Math.PI / 2} castShadow>
         <torusGeometry args={[0.02, 0.0055, 12, 32, Math.PI]} />
-        <meshStandardMaterial color="#e9e4da" roughness={0.25} />
+        <meshStandardMaterial color="#00274c" roughness={0.22} />
+      </mesh>
+      <mesh position={[0, 0.05, 0]}>
+        <cylinderGeometry args={[0.0408, 0.0402, 0.067, 40, 1, true, -0.74, 1.48]} />
+        <meshStandardMaterial map={blockM} transparent roughness={0.3} depthWrite={false} polygonOffset polygonOffsetFactor={-1} />
       </mesh>
       <Steam />
     </group>

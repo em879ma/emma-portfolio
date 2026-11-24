@@ -262,7 +262,7 @@ export function SlideTracker() {
       el.style.opacity = shown.toFixed(3)
       el.style.translate = `0 ${(dy * (1 - shown)).toFixed(1)}px`
     }
-    if (above) above.style.transform = `translate(${((q[2][0] + q[3][0]) / 2).toFixed(1)}px, ${Math.min(q[2][1], q[3][1]).toFixed(1)}px) translate(-50%, -100%)`
+    if (above) above.style.transform = `translate(${((q[2][0] + q[3][0]) / 2).toFixed(1)}px, ${Math.max(above.offsetHeight + 56, Math.min(q[2][1], q[3][1])).toFixed(1)}px) translate(-50%, -100%)`
     if (below) below.style.transform = `translate(${((q[0][0] + q[1][0]) / 2).toFixed(1)}px, ${Math.max(q[0][1], q[1][1]).toFixed(1)}px) translateX(-50%)`
   })
   return null
@@ -313,7 +313,7 @@ function useSlide(blank: boolean) {
       const { hello, name, caption, place } = type
       const g = canvas.getContext('2d')!
       const { width: w, height: h } = canvas
-      g.fillStyle = '#fbf6ec'
+      g.fillStyle = '#fefaf0'
       g.fillRect(0, 0, w, h)
       g.textAlign = 'center'
       g.textBaseline = 'alphabetic'
@@ -325,7 +325,7 @@ function useSlide(blank: boolean) {
         g.fillStyle = ink(0.95)
         g.font = `400 ${name[0]}px Jost, system-ui, sans-serif`
         g.letterSpacing = '-5px'
-        g.fillText(site.name, w / 2, name[1])
+        g.fillText(site.name, w / 2, name[1], w * 0.84)
         g.letterSpacing = '0px'
         g.fillStyle = ink(0.9)
         g.font = `400 ${caption[0]}px Jost, system-ui, sans-serif`

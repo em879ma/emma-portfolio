@@ -1,13 +1,34 @@
-// Photos pinned on the About corkboard: two rows of three. Put image files in
-// public/board/: `src` is the square print on the board (512×512), `full` the
-// whole photo the About page opens on click (about 1600px on the long side).
-// A short caption is written under the photo. Without `src` the slot shows a
-// placeholder print.
-
 export type Photo = { src?: string; full?: string; caption?: string }
 
-export const photos: Photo[] = [1, 2, 3, 4, 5, 6].map((n) => ({
-  src: `/board/photo-${n}.jpg`,
-  full: `/board/full/photo-${n}.jpg`,
-  caption: `A place, 202${n}`,
-}))
+export const photos = [
+  {
+    "src": "/projects/emma/solarcar.jpg",
+    "full": "/projects/emma/solarcar.jpg",
+    "caption": "Solar Car Team"
+  },
+  {
+    "src": "/projects/emma/routemap.webp",
+    "full": "/projects/emma/routemap.webp",
+    "caption": "Across the country"
+  },
+  {
+    "src": "/projects/emma/workspace.jpg",
+    "full": "/projects/emma/workspace.jpg",
+    "caption": "Where we build"
+  },
+  {
+    "src": "/projects/emma/fig4.png",
+    "full": "/projects/emma/fig4.png",
+    "caption": "Freely-Chat"
+  },
+  {
+    "src": "/projects/emma/prompt.png",
+    "full": "/projects/emma/prompt.png",
+    "caption": "Exploring AI reasoning"
+  },
+  {
+    "src": "/projects/emma/GAIR-result.png",
+    "full": "/projects/emma/GAIR-result.png",
+    "caption": "Research & evaluation"
+  }
+]

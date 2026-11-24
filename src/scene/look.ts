@@ -1,19 +1,22 @@
 import { CanvasTexture, SRGBColorSpace } from 'three'
 
-// One palette for the set: warm whites and beige plastics, graphite, and a
-// single orange (the typewriter) as the accent.
+// Emma's autumn/winter palette. Material shades derive from these six swatches.
+export const palette = {
+  chestnut: '#542916', wheat: '#b79858', terracotta: '#a13a1e',
+  sky: '#88b8ce', cream: '#fefaf0', honey: '#f1c166',
+}
 export const C = {
-  cove: '#bab3a8',
-  shell: '#ebe6dc',
-  shellDark: '#d9d2c4',
-  graphite: '#3b3a37',
-  key: '#2c2a27',
-  rubber: '#1d1c1a',
-  orange: '#d4612f',
-  chrome: '#cfcfca',
-  cork: '#b58d60',
-  paper: '#fbf9f4',
-  desk: '#f4f1eb',
+  cove: '#d5bd91',
+  shell: palette.cream,
+  shellDark: '#d9c9a6',
+  graphite: palette.chestnut,
+  key: palette.chestnut,
+  rubber: '#301b13',
+  orange: palette.terracotta,
+  chrome: palette.wheat,
+  cork: palette.wheat,
+  paper: palette.cream,
+  desk: palette.chestnut,
 }
 
 // Small canvas-drawn textures, so the set needs no image files yet.
@@ -55,7 +58,7 @@ export function scribble(g: CanvasRenderingContext2D, x: number, y: number, w: n
 
 // Teak veneer: long grain lines with a little waviness and figure, drawn
 // along the texture's width.
-export function woodTexture(w = 1024, h = 512, base = '#b47c50', seed = 5) {
+export function woodTexture(w = 1024, h = 512, base = '#542916', seed = 5) {
   const r = rng(seed)
   return paintTexture(w, h, (g) => {
     g.fillStyle = base

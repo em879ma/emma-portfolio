@@ -5,6 +5,8 @@ import { stage } from '../scene/Projection'
 import type { TrayAt } from '../scene/Studio'
 import { t, useLang, type Lang } from '../lang'
 import { PhotoViewer } from './Pages'
+import { GairLoop } from './GairLoop'
+import { InteraidFlow } from './InteraidFlow'
 
 // The Projects page. On a wide screen the projected frame is the stage: the
 // slide is real DOM fitted onto it (SlideTracker), the trays hang above it and
@@ -76,7 +78,7 @@ function ProjectStage({ at, setAt }: { at: TrayAt; setAt: (at: TrayAt) => void }
       <section className="slide" ref={(el) => void (stage.slide = el)} aria-live="polite">
         <SlideView p={sp} slide={slidesOf(sp)[shown.slide] ?? { kind: 'cover' }} openDetails={() => setDetails(true)} />
       </section>
-      <div className="slide-nav" ref={(el) => void (stage.below = el)}>
+      <div className="slide-nav" style={{ display: p.presentation || slides.length <= 1 ? 'none' : undefined }} ref={(el) => void (stage.below = el)}>
         <button onClick={() => go(at.slide - 1)} disabled={at.slide === 0} aria-label="Previous slide">
           ←
         </button>
@@ -110,6 +112,16 @@ function With({ p, lang }: { p: Project; lang: Lang }) {
 // One slide: a large picture at the left, a short text at the right.
 function SlideView({ p, slide, openDetails }: { p: Project; slide: Slide; openDetails: () => void }) {
   const lang = useLang()
+  if (p.presentation) return <div className="slide__body slide--cover">
+    <EmbeddedPresentation p={p} />
+    <div className="slide__text">
+      <p className="meta">{contextOf(p)}</p>
+      <h2>{p.title}</h2>
+      <p className="slide__lead">{t(p.pitch, lang)}</p>
+      <Stack p={p} />
+      <Links p={p} />
+    </div>
+  </div>
   const actions = (
     <p className="slide__actions">
       <button onClick={openDetails}>{t(UI.details, lang)}</button>
@@ -149,7 +161,7 @@ function SlideView({ p, slide, openDetails }: { p: Project; slide: Slide; openDe
   if (slide.kind === 'picture')
     return (
       <div className="slide__body">
-        <img src={slide.src} alt={slide.alt} />
+        {slide.src.endsWith('/gair-loop.svg') ? <GairLoop /> : slide.src.endsWith('/interaid-flow.svg') ? <InteraidFlow /> : <img src={slide.src} alt={slide.alt} />}
         <div className="slide__text">
           <h3>{t(slide.title, lang)}</h3>
           <p>{t(slide.body, lang)}</p>
@@ -166,6 +178,20 @@ function SlideView({ p, slide, openDetails }: { p: Project; slide: Slide; openDe
       </div>
     </div>
   )
+}
+
+function EmbeddedPresentation({ p }: { p: Project }) {
+  const lang = useLang()
+  const frame = useRef<HTMLIFrameElement>(null)
+  const move = (direction: 'prev' | 'next') => frame.current?.contentWindow?.postMessage({ type: 'portfolio-deck', direction }, '*')
+  return <div className="embedded-presentation">
+    <iframe ref={frame} src={p.presentation} title={`${p.title} — Presentation`} sandbox="allow-scripts" allowFullScreen />
+    <div className="embedded-presentation__controls">
+      <button onClick={() => move('prev')} aria-label={lang === 'zh' ? '上一张演示幻灯片' : 'Previous presentation slide'}>‹</button>
+      <span>{lang === 'zh' ? '左右滑动浏览' : 'Swipe to explore'}</span>
+      <button onClick={() => move('next')} aria-label={lang === 'zh' ? '下一张演示幻灯片' : 'Next presentation slide'}>›</button>
+    </div>
+  </div>
 }
 
 function Stack({ p }: { p: Project }) {
@@ -208,9 +234,25 @@ function Details({ p, close }: { p: Project; close: () => void }) {
   )
 }
 
+function EvidenceGallery({ p }: { p: Project }) {
+  const lang = useLang()
+  const [selected, setSelected] = useState<number | null>(null)
+  if (!p.evidence?.length) return null
+  const photos = p.evidence.map((picture) => ({ src: picture.src, full: picture.src, caption: t(picture.caption, lang) }))
+  return <section className="evidence-gallery">
+    <h3>{['interaid-network', 'independent-ai-studio'].includes(p.id) ? (lang === 'zh' ? (p.id === 'independent-ai-studio' ? '上海线下 AI 活动' : '产品界面') : (p.id === 'independent-ai-studio' ? 'AI community events in Shanghai' : 'Product views')) : (lang === 'zh' ? '实验记录与证据' : 'Experimental records & evidence')}</h3>
+    {p.id === 'gair-evaluation' && <GairLoop />}
+    {p.evidence.map((picture, i) => <figure key={picture.src}>
+      <button className="zoom" onClick={() => setSelected(i)} aria-label={`${lang === 'zh' ? '放大图片' : 'Enlarge image'}: ${picture.alt}`}><img src={picture.src} alt={picture.alt} loading="lazy" /></button>
+      <figcaption>{t(picture.caption, lang)} {lang === 'zh' ? '点击图片放大。' : 'Click the image to enlarge.'}</figcaption>
+    </figure>)}
+    {selected !== null && <PhotoViewer photos={photos} at={selected} setAt={setSelected} />}
+  </section>
+}
+
 function ProjectText({ p }: { p: Project }) {
   const lang = useLang()
-  const pictures = [p.cover, ...p.slides, ...(p.results ? [p.results] : [])]
+  const pictures = p.evidence ? [] : [p.cover, ...p.slides, ...(p.results ? [p.results] : [])]
   return (
     <>
       <p className="meta">{contextOf(p)}</p>
@@ -226,16 +268,17 @@ function ProjectText({ p }: { p: Project }) {
       {p.details.map((d) => (
         <section key={t(d.heading, 'en')}>
           <h3>{t(d.heading, lang)}</h3>
-          {d.body.map((b) => (
+          {p.id === 'independent-ai-studio' ? <ul>{d.body.map((b) => <li key={t(b, 'en')}>{t(b, lang)}</li>)}</ul> : d.body.map((b) => (
             <p key={t(b, 'en')}>{t(b, lang)}</p>
           ))}
         </section>
       ))}
-      <section>
+      <EvidenceGallery p={p} />
+      {(p.metrics.length > 0 || p.disclaimer) && <section>
         <h3>{t(UI.limits, lang)}</h3>
         <Metrics p={p} />
         {p.disclaimer && <p className="fine">{t(p.disclaimer, lang)}</p>}
-      </section>
+      </section>}
       <Links p={p} />
     </>
   )
@@ -308,6 +351,7 @@ function ProjectScroll({ at, setAt }: { at: TrayAt; setAt: (at: TrayAt) => void 
           <With p={p} lang={lang} />
           <Stack p={p} />
           <Links p={p} />
+          {p.presentation && <EmbeddedPresentation p={{ ...p, links: [] }} />}
           {p.film && (
             <figure>
               <video src={t(p.film.src, lang)} poster={t(p.film.poster, lang)} controls muted playsInline preload="none" />
@@ -334,7 +378,7 @@ function ProjectScroll({ at, setAt }: { at: TrayAt; setAt: (at: TrayAt) => void 
               {p.disclaimer && <p className="fine">{t(p.disclaimer, lang)}</p>}
             </section>
           )}
-          <details className="story">
+          {!p.presentation && <details className="story">
             <summary>{t(UI.story, lang)}</summary>
             {p.details.map((d) => (
               <section key={t(d.heading, 'en')}>
@@ -344,7 +388,8 @@ function ProjectScroll({ at, setAt }: { at: TrayAt; setAt: (at: TrayAt) => void 
                 ))}
               </section>
             ))}
-          </details>
+          </details>}
+          <EvidenceGallery p={p} />
           <button className="next" onClick={() => setAt({ project: next, slide: 0 })}>
             {t(UI.next, lang)}: {projects[next].title} →
           </button>

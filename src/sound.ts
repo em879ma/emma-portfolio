@@ -5,6 +5,8 @@
 // The click that ends the black opening turns them on unless the visitor has
 // turned them off before; the toggle's choice is remembered in this browser.
 
+// Temporarily disable all audio, including previously saved preferences.
+const SOUND_ENABLED = false
 const KEY = 'desk.sound'
 
 const stored = (() => {
@@ -14,7 +16,7 @@ const stored = (() => {
     return null
   }
 })()
-let on = stored === 'on'
+let on = SOUND_ENABLED && stored === 'on'
 let ctx: AudioContext | null = null
 let master: GainNode | null = null
 let hiss: AudioBuffer | null = null
@@ -40,6 +42,7 @@ export function setSound(next: boolean) {
 }
 
 function turn(next: boolean) {
+  next = SOUND_ENABLED && next
   on = next
   if (next) ambience.start()
   else ambience.stop()

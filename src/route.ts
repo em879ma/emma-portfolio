@@ -3,13 +3,14 @@ import type { Text } from './lang'
 
 // The four pages are four camera shots of one scene, so routing is just
 // "which shot", kept in the URL so every page can be linked to.
-export type Route = 'landing' | 'projects' | 'experience' | 'about'
+export type Route = 'landing' | 'projects' | 'experience' | 'about' | 'resume'
 
 const PATHS: Record<Route, string> = {
   landing: '/',
   projects: '/projects',
   experience: '/experience',
   about: '/about',
+  resume: '/resume',
 }
 
 // what the nav and the tags on the set call each page
@@ -17,6 +18,7 @@ export const LABELS: Record<Exclude<Route, 'landing'>, Text> = {
   projects: { en: 'Projects', zh: '项目' },
   experience: { en: 'Experience', zh: '经历' },
   about: { en: 'About', zh: '关于我' },
+  resume: { en: 'Resume', zh: 'Resume' },
 }
 
 // /projects/<id> is the projects shot, opened on that project's tray

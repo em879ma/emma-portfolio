@@ -1,12 +1,12 @@
-import { Fragment, useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { AboutIntro } from './AboutIntro'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { education, experience } from '../content/experience'
 import { type Photo, photos } from '../content/board'
 import { notes, portrait } from '../content/notes'
-import { site } from '../content/site'
 import { keyStrike, paperScroll } from '../scene/Typewriter'
 import { setLang, t, useLang } from '../lang'
 import { follow } from '../route'
-import { onSoundChange, setSound, sfx, soundOn } from '../sound'
+import { sfx } from '../sound'
 
 // The reading layer of each page: flat, real text that sits over the shot
 // once the camera has walked up to the object. 3D gets you there; you read
@@ -67,19 +67,35 @@ export function PaperRoll() {
   return (
     <div className="paper-slot">
       <article ref={sheet} className="sheet sheet--paper" tabIndex={0} onScroll={(e) => (paperScroll.px = fedPx.current + e.currentTarget.scrollTop)}>
+        <section className="education-section">
+          <h2 className="cv-section-title">{lang === 'zh' ? '教育经历' : 'Education'}</h2>
+          {education.map((e) => <section className="job" key={t(e.school, 'en')}>
+            <h3 className="cv-school">{t(e.school, lang)}</h3>
+            <p className="job__line"><span>{t(e.degree, lang)}</span><span>{t(e.end, lang)}</span></p>
+            {e.coursework && <p className="cv-coursework"><strong>{lang === 'zh' ? '相关课程：' : 'Coursework: '}</strong>{t(e.coursework, lang)}</p>}
+            {e.research && <div className="cv-school-detail">
+              <h4>{lang === 'zh' ? '研究经历' : 'Research'}</h4>
+              <p className="cv-research-title">{t(e.research.title, lang)}</p>
+              <p style={{ whiteSpace: 'pre-line' }}>{t(e.research.description, lang)}</p>
+            </div>}
+            {e.honors && <div className="cv-school-detail">
+              <h4>{lang === 'zh' ? '荣誉与奖项' : 'Honors'}</h4>
+              <ul>{e.honors.map((honor) => <li key={t(honor, 'en')}>{t(honor, lang)}</li>)}</ul>
+            </div>}
+          </section>)}
+        </section>
+        <h2 className="cv-section-title">{lang === 'zh' ? '工作经历' : 'Work Experience'}</h2>
         {experience.map((job, i) => (
-          <section key={job.url} className="job">
+          <section key={t(job.company, 'en')} className="job">
             <h2>
-              <a href={job.url} target="_blank" rel="noreferrer">
-                {i === 0 ? <Typed text={t(job.company, lang)} start={fed} /> : t(job.company, lang)}
-              </a>
+              {job.url ? <a href={job.url} target="_blank" rel="noreferrer">{t(job.company, lang)}</a> : i === 0 ? <Typed text={t(job.company, lang)} start={fed} /> : t(job.company, lang)}
             </h2>
             <p className="job__line">
               <span>
-                {t(job.role, lang)} · {t(job.place, lang)}
+                {t(job.role, lang)}{job.place ? ` · ${t(job.place, lang)}` : ''}
               </span>
               <span>
-                {job.start} – {job.end}
+                {job.start} – {t(job.end, lang)}
               </span>
             </p>
             <ul>
@@ -91,22 +107,7 @@ export function PaperRoll() {
             </ul>
           </section>
         ))}
-        {education.length > 0 && (
-          <section className="job">
-            <h2>{lang === 'zh' ? '教育经历' : 'Education'}</h2>
-            {education.map((e) => (
-              <div key={e.start}>
-                <p className="job__line">
-                  <span>{t(e.school, lang)}</span>
-                  <span>
-                    {e.start} – {e.end}
-                  </span>
-                </p>
-                <p className="edu">{t(e.degree, lang)}</p>
-              </div>
-            ))}
-          </section>
-        )}
+
       </article>
     </div>
   )
@@ -149,13 +150,7 @@ export function Notebook({ onPhoto }: { onPhoto: (i: number) => void }) {
   return (
     <article className="sheet sheet--notebook" key={note.date}>
       <img className="portrait" src={portrait.src} alt={portrait.alt} width={480} height={480} />
-      <p className="meta">{note.date}</p>
-      <h2>{t(note.title, lang)}</h2>
-      {body.split(/\n\s*\n/).map((para) => (
-        <p key={para}>
-          <Inline text={para} onPicture={setPic} />
-        </p>
-      ))}
+      <AboutIntro />
       {pic && <PhotoViewer photos={[pic]} at={0} setAt={() => setPic(null)} />}
       {/* the corkboard's photos as a strip: on phones the board is too small to
           read, and keyboard users reach the photos here too */}
@@ -178,14 +173,7 @@ export function Notebook({ onPhoto }: { onPhoto: (i: number) => void }) {
           </button>
         </nav>
       )}
-      <address className="contact">
-        <a href={`mailto:${site.email}`}>{site.email}</a>
-        {site.links.map((l) => (
-          <a key={l.href} href={l.href} target="_blank" rel="noreferrer">
-            {l.label}
-          </a>
-        ))}
-      </address>
+
     </article>
   )
 }
@@ -270,15 +258,6 @@ export function PhotoViewer({ photos, at, setAt }: { photos: Photo[]; at: number
         ×
       </button>
     </dialog>
-  )
-}
-
-export function SoundToggle() {
-  const on = useSyncExternalStore(onSoundChange, soundOn)
-  return (
-    <button className="sound" aria-pressed={on} onClick={() => setSound(!on)}>
-      Sound {on ? 'on' : 'off'}
-    </button>
   )
 }
 

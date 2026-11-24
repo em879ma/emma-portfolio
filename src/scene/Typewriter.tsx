@@ -329,7 +329,7 @@ function legendAtlas() {
   const tex = paintTexture(512, 512, (c) => {
     c.fillStyle = C.key
     c.fillRect(0, 0, 512, 512)
-    c.fillStyle = '#ece7dc'
+    c.fillStyle = '#fefaf0'
     c.font = '600 22px "Helvetica Neue", Helvetica, Arial, sans-serif'
     c.textAlign = 'center'
     c.textBaseline = 'middle'
@@ -444,9 +444,9 @@ function TypeBars({ m }: { m: Mats }) {
 function MarginScale({ m }: { m: Mats }) {
   const tex = useMemo(() => {
     const t = paintTexture(1024, 40, (c) => {
-      c.fillStyle = '#efe9dc'
+      c.fillStyle = '#fefaf0'
       c.fillRect(0, 0, 1024, 40)
-      c.fillStyle = '#2c2a27'
+      c.fillStyle = '#542916'
       c.font = '600 15px "Helvetica Neue", Helvetica, Arial, sans-serif'
       c.textAlign = 'center'
       for (let i = 0; i <= 90; i++) {
@@ -486,9 +486,9 @@ function Sheet() {
     const tex = paintTexture(256, 276, (c) => {
       agedPaper(c, 256, 276)
       // read from the top: the latest lines sit at the bottom by the platen
-      scribble(c, 28, 40, 200, 4, 11, '#4a4741', 3)
-      scribble(c, 28, 110, 200, 6, 11, '#6d6961', 9)
-      scribble(c, 28, 200, 170, 3, 11, '#6d6961', 12)
+      scribble(c, 28, 40, 200, 4, 11, '#542916', 3)
+      scribble(c, 28, 110, 200, 6, 11, '#76513a', 9)
+      scribble(c, 28, 200, 170, 3, 11, '#76513a', 12)
     })
     tex.flipY = true
     // Winding in: the paper slides down its own path into the platen, so its

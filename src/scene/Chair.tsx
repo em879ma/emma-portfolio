@@ -8,8 +8,8 @@ import { C } from './look'
 // Origin: on the floor under the column; the seat faces -z.
 
 const SEAT_Y = 0.46
-const leather = { color: '#8a5634', roughness: 0.55 }
-const alu = { color: '#c9c9c4', metalness: 0.9, roughness: 0.28 }
+const leather = { color: '#a13a1e', roughness: 0.55 }
+const alu = { color: '#b79858', metalness: 0.9, roughness: 0.28 }
 
 export function Chair() {
   // the back seen from above: a band on an arc, extruded up and bevelled

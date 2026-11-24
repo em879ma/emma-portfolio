@@ -24,7 +24,7 @@ export function Notebook() {
       const tex = paintTexture(256, 352, (c) => {
         c.fillStyle = C.paper
         c.fillRect(0, 0, 256, 352)
-        c.fillStyle = '#d9e2e6'
+        c.fillStyle = '#88b8ce'
         for (let y = 40; y < 340; y += 14) c.fillRect(14, y, 228, 1)
         if (side === 1) {
           scribble(c, 26, 30, 200, 1, 14, '#3c3a36', seed)
@@ -44,18 +44,18 @@ export function Notebook() {
       {/* the open hardcover: two boards and a cloth spine */}
       {[-1, 1].map((side) => (
         <RoundedBox key={side} args={[PAGE_W + 0.008, 0.004, PAGE_H + 0.01]} radius={0.0018} smoothness={2} position={[side * (PAGE_W / 2 + 0.004), 0.002, 0]} castShadow receiveShadow>
-          <meshStandardMaterial color="#2b2a28" roughness={0.75} />
+          <meshStandardMaterial color="#542916" roughness={0.75} />
         </RoundedBox>
       ))}
       <mesh position={[0, 0.0015, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.006, 0.006, PAGE_H + 0.01, 16, 1, true, 0, Math.PI]} />
-        <meshStandardMaterial color="#232220" roughness={0.8} side={DoubleSide} />
+        <meshStandardMaterial color="#542916" roughness={0.8} side={DoubleSide} />
       </mesh>
       {/* the page block under the open spread, its fore-edges showing */}
       {[-1, 1].map((side) => (
         <mesh key={side} position={[side * (PAGE_W / 2 + 0.002), 0.0055, 0]} castShadow receiveShadow>
           <boxGeometry args={[PAGE_W - 0.004, 0.004, PAGE_H - 0.002]} />
-          <meshStandardMaterial color="#efe9dc" roughness={0.95} />
+          <meshStandardMaterial color="#fefaf0" roughness={0.95} />
         </mesh>
       ))}
       {pages.map(({ g, tex, x }) => (
@@ -66,7 +66,7 @@ export function Notebook() {
       {/* the elastic band, slack along the right board's edge */}
       <mesh position={[PAGE_W + 0.0095, 0.004, 0]}>
         <boxGeometry args={[0.003, 0.003, PAGE_H + 0.012]} />
-        <meshStandardMaterial color="#1b1a19" roughness={0.6} />
+        <meshStandardMaterial color="#542916" roughness={0.6} />
       </mesh>
       {/* ribbon bookmark out of the foot of the spine */}
       <mesh position={[0.006, 0.0082, 0.128]} rotation={[-Math.PI / 2, 0, 0.18]}>

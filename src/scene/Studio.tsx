@@ -1,3 +1,4 @@
+import { ResumeDrawer } from './ResumeDrawer'
 import { ContactShadows, Environment, Lightformer, RoundedBox } from '@react-three/drei'
 import { useFrame, type ThreeEvent } from '@react-three/fiber'
 import { Suspense, useMemo, useRef, type ReactNode } from 'react'
@@ -5,6 +6,7 @@ import { BackSide, MathUtils, type Group } from 'three'
 import { projects, slidesOf } from '../content/projects'
 import type { Route } from '../route'
 import { Chair } from './Chair'
+import { InterestObjects } from './InterestObjects'
 import { Corkboard } from './Corkboard'
 import { C, woodTexture } from './look'
 import { Notebook } from './Notebook'
@@ -45,11 +47,11 @@ export function Studio({ route, at, go, begun, onPhoto }: Props) {
           3:1 against the fill). The key misses the back wall, which falls off
           slowly in the fill alone: the slide is the brightest thing in the
           picture, the desk the second, the notebook's warm pool the third. */}
-      <hemisphereLight args={['#ffffff', '#cfc6b8', 0.2]} />
+      <hemisphereLight args={['#ffffff', '#b79858', 0.2]} />
       <directionalLight
         position={[-4, 4.2, -0.6]}
         intensity={2.6}
-        color="#fff1df"
+        color="#fefaf0"
         castShadow
         shadow-mapSize={[2048, 2048]}
         shadow-bias={-0.0004}
@@ -66,11 +68,12 @@ export function Studio({ route, at, go, begun, onPhoto }: Props) {
       <Environment files="/env/studio_small_08.hdr" resolution={256} environmentIntensity={0.3}>
         <Lightformer form="rect" intensity={1.6} position={[-4, 2.5, -0.5]} rotation-y={Math.PI / 2} scale={[3, 4, 1]} />
         <Lightformer form="rect" intensity={0.8} position={[0, 5, 0]} rotation-x={Math.PI / 2} scale={[6, 3, 1]} />
-        <Lightformer form="rect" intensity={0.25} color="#e8eef8" position={[4, 2, 1]} rotation-y={-Math.PI / 2} scale={[3, 4, 1]} />
+        <Lightformer form="rect" intensity={0.25} color="#fefaf0" position={[4, 2, 1]} rotation-y={-Math.PI / 2} scale={[3, 4, 1]} />
       </Environment>
 
       <Cove />
-      <Desk />
+      <Desk route={route} go={go} />
+      <DisplayCabinet />
       {/* contact shadows seat the objects on the desk and the set on the floor */}
       <ContactShadows position={[0.15, SET.deskTop + 0.001, 0.1]} scale={[1.9, 0.85]} far={0.25} blur={1.6} opacity={0.5} resolution={1024} frames={1} color="#2b2016" />
       <ContactShadows position={[0.4, 0.002, -0.3]} scale={9} far={1.2} blur={2.4} opacity={0.35} resolution={512} frames={1} color="#3a3026" />
@@ -129,12 +132,12 @@ const DESK = { w: 1.9, d: 0.85, t: 0.03 }
 // how far the right legs' feet lean out, sideways and to front and back (rad)
 const LEG_SPLAY = { x: 0.05, z: 0.06 }
 
-function Desk() {
+function Desk({ route, go }: { route: Route; go: (r: Route) => void }) {
   const top = SET.deskTop
   const wood = useMemo(() => woodTexture(), [])
-  const end = useMemo(() => woodTexture(256, 512, '#a86f45', 9), [])
+  const end = useMemo(() => woodTexture(256, 512, '#673b24', 9), [])
   const teak = <meshStandardMaterial map={wood} roughness={0.45} envMapIntensity={0.8} />
-  const brass = <meshStandardMaterial color="#b8925a" metalness={0.9} roughness={0.3} />
+  const brass = <meshStandardMaterial color="#b79858" metalness={0.9} roughness={0.3} />
   const under = top - DESK.t
   // the pedestal: a case to the floor on four short legs, three drawers
   const ped = { w: 0.44, d: DESK.d - 0.06, x: -DESK.w / 2 + 0.22 + 0.02, foot: 0.09 }
@@ -155,16 +158,7 @@ function Desk() {
         <boxGeometry args={[DESK.w - 0.6, 0.07, 0.022]} />
         {teak}
       </mesh>
-      {/* a shallow pencil drawer in the front rail, with a recessed pull */}
-      <group position={[0.2, under - 0.04, DESK.d / 2 - 0.036]}>
-        <RoundedBox args={[0.56, 0.058, 0.012]} radius={0.003} smoothness={2} castShadow>
-          <meshStandardMaterial map={end} roughness={0.5} />
-        </RoundedBox>
-        <mesh position={[0, 0.012, 0.0065]}>
-          <boxGeometry args={[0.16, 0.008, 0.002]} />
-          <meshStandardMaterial color="#2b1a10" roughness={0.9} />
-        </mesh>
-      </group>
+      <ResumeDrawer route={route} go={go} />
       {/* modesty panel at the back */}
       <mesh position={[0.2, under - 0.17, -DESK.d / 2 + 0.04]} castShadow receiveShadow>
         <boxGeometry args={[DESK.w - 0.62, 0.34, 0.018]} />
@@ -278,6 +272,34 @@ function Prop(props: {
     >
       {/* lifts a hair off the desk on hover */}
       <group ref={lift}>{props.children}</group>
+    </group>
+  )
+}
+
+// Four shelves of Emma's photography, music, sport and cooking objects.
+function DisplayCabinet() {
+  const grain = useMemo(() => woodTexture(512, 512, '#673b24', 23), [])
+  const wood = <meshStandardMaterial map={grain} roughness={0.58} />
+  return (
+    <group position={[-1.38, 0, -0.04]} rotation-y={0.08}>
+      <InterestObjects />
+      {/* A recessed blue back gives the empty niches depth. */}
+      <mesh position={[0, 0.74, -0.17]} receiveShadow>
+        <boxGeometry args={[0.53, 1.26, 0.025]} />
+        <meshStandardMaterial color="#88b8ce" roughness={0.9} />
+      </mesh>
+      {[-0.285, 0.285].map((x) => (
+        <RoundedBox key={x} args={[0.035, 1.30, 0.38]} radius={0.006} position={[x, 0.74, 0]} castShadow receiveShadow>{wood}</RoundedBox>
+      ))}
+      {[0.1, 0.42, 0.74, 1.06, 1.38].map((y) => (
+        <RoundedBox key={y} args={[0.60, 0.035, 0.40]} radius={0.006} position={[0, y, 0]} castShadow receiveShadow>{wood}</RoundedBox>
+      ))}
+      {[-0.23, 0.23].flatMap((x) => [-0.13, 0.13].map((z) => (
+        <mesh key={`${x}:${z}`} position={[x, 0.045, z]} castShadow>
+          <boxGeometry args={[0.035, 0.09, 0.035]} />
+          <meshStandardMaterial color="#b79858" metalness={0.7} roughness={0.4} />
+        </mesh>
+      )))}
     </group>
   )
 }

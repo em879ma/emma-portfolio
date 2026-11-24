@@ -1,3 +1,4 @@
+import { Resume } from './pages/Resume'
 import { Canvas } from '@react-three/fiber'
 import { useEffect, useState } from 'react'
 import { NeutralToneMapping } from 'three'
@@ -7,7 +8,7 @@ import { Intro } from './Intro'
 import { site } from './content/site'
 import { photos } from './content/board'
 import { projects } from './content/projects'
-import { LangToggle, Notebook, PaperRoll, PhotoViewer, SoundToggle } from './pages/Pages'
+import { LangToggle, Notebook, PaperRoll, PhotoViewer } from './pages/Pages'
 import { t, useLang } from './lang'
 import { Projects } from './pages/Projects'
 import { lightsOn, sfx } from './sound'
@@ -18,7 +19,7 @@ import { SlideTracker } from './scene/Projection'
 import { Studio, type TrayAt } from './scene/Studio'
 import { TagTracker, Tags } from './scene/Tags'
 
-const PAGES = ['projects', 'experience', 'about'] as const
+const PAGES = ['projects', 'experience', 'about', 'resume'] as const
 
 export default function App() {
   const [route, go, path] = useRoute()
@@ -92,7 +93,6 @@ export default function App() {
       {begun && (
         <div className="settings">
           <LangToggle />
-          <SoundToggle />
         </div>
       )}
 
@@ -116,6 +116,7 @@ export default function App() {
         {route === 'projects' && <Projects at={at} setAt={setAt} />}
         {/* the sheet's paper is drawn to its length, so a new language feeds a new sheet */}
         {route === 'experience' && <PaperRoll key={lang} />}
+        {route === 'resume' && <Resume />}
         {route === 'about' && <Notebook onPhoto={setPhoto} />}
       </main>
       {route === 'about' && photo !== null && <PhotoViewer photos={photos} at={photo} setAt={setPhoto} />}
