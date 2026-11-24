@@ -157,8 +157,8 @@ export function Notebook({ onPhoto }: { onPhoto: (i: number) => void }) {
       <ul className="board-strip" aria-label="Photos on the board">
         {photos.map((p, i) => (
           <li key={i}>
-            <button onClick={() => onPhoto(i)}>
-              <img src={p.src} alt={p.caption ?? ''} width={512} height={512} />
+            <button onClick={() => onPhoto(i)} aria-label={p.alt ?? `Photo ${i + 1}`}>
+              <img src={p.src} alt={p.alt ?? p.caption ?? ''} width={512} height={512} />
             </button>
           </li>
         ))}
@@ -228,7 +228,7 @@ export function PhotoViewer({ photos, at, setAt }: { photos: Photo[]; at: number
     <dialog
       ref={ref}
       className="viewer"
-      aria-label={photo.caption}
+      aria-label={photo.caption ?? photo.alt ?? 'Photo'}
       onClose={() => setAt(null)}
       onClick={(e) => e.target === e.currentTarget && Math.abs(e.clientX - swipe.current) < 10 && ref.current!.close()}
       onKeyDown={(e) => {
@@ -244,7 +244,7 @@ export function PhotoViewer({ photos, at, setAt }: { photos: Photo[]; at: number
       <figure key={src} className={shown === src ? 'is-shown' : undefined}>
         <img
           src={src}
-          alt={photo.caption ?? ''}
+          alt={photo.alt ?? photo.caption ?? ''}
           onLoad={(e) => e.currentTarget.decode().catch(() => {}).then(() => setShown(src))}
           onError={() => setShown(src)}
         />
